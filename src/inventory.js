@@ -22,6 +22,19 @@ export function sortProducts(products, order) {
   });
 }
 
+export function filterProducts(products, query, category) {
+  const normalizedQuery = query.trim().toLowerCase();
+  return products.filter(product => {
+    if (category !== 'all' && product.category !== category) return false;
+    if (!normalizedQuery) return true;
+    return (
+      product.name.toLowerCase().includes(normalizedQuery) ||
+      product.brand.toLowerCase().includes(normalizedQuery) ||
+      product.category.toLowerCase().includes(normalizedQuery)
+    );
+  });
+}
+
 function readRecords(key) {
   const saved = localStorage.getItem(key);
   if (saved === null) return null;

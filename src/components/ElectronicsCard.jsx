@@ -3,23 +3,38 @@ import { formatPrice } from '../inventory';
 
 const images = new Set(['headphones', 'keyboard', 'controller']);
 
-export default function ElectronicsCard({ product, onDelete }) {
+export default function ElectronicsCard({ product, index, onDelete }) {
   const illustration = images.has(product.image) ? product.image : 'chip';
+  const rowNumber = String(index).padStart(2, '0');
+
   return (
-    <li className="product-card">
-      <div className={'thumbnail ' + illustration}><img src={'./art/' + illustration + '.png'} alt="" /></div>
-      <div className="product-detail">
-        <h3>{product.name}</h3>
-        <p className="product-meta">
-          <span className="brand-tag">{product.brand}</span>
-          <span className="meta-sep" aria-hidden="true">/</span>
-          <span className="category-tag">{product.category}</span>
-        </p>
-      </div>
-      <strong className="amount">{formatPrice.format(product.price)}</strong>
-      <button type="button" className="delete-button" aria-label={'Delete ' + product.name} title={'Delete ' + product.name} onClick={() => onDelete(product)}>
-        <span className="bin" aria-hidden="true" />
-      </button>
+    <li className="product-item">
+      <article className="product-card">
+        <div className={'thumbnail ' + illustration}>
+          <img src={'./art/' + illustration + '.png'} alt="" />
+        </div>
+        <div className="product-detail">
+          <div className="product-title-row">
+            <span className="row-index" aria-hidden="true">#{rowNumber}</span>
+            <h3>{product.name}</h3>
+          </div>
+          <p className="product-meta">
+            <span className="brand-tag">{product.brand}</span>
+            <span className="meta-sep" aria-hidden="true">/</span>
+            <span className="category-tag">{product.category}</span>
+          </p>
+        </div>
+        <strong className="amount">{formatPrice.format(product.price)}</strong>
+        <button
+          type="button"
+          className="delete-button"
+          aria-label={'Delete ' + product.name}
+          title={'Delete ' + product.name}
+          onClick={() => onDelete(product)}
+        >
+          <span className="bin" aria-hidden="true" />
+        </button>
+      </article>
     </li>
   );
 }
