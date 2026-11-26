@@ -1,25 +1,33 @@
-export const storageKey = 'voltstock.inventory.v1';
+import { additionalSamples, originalSamples } from './sampleProducts.js';
 
-const examples = [
-  { id: 'sample-headphones', name: 'Studio headphones', brand: 'Audio-Technica', price: 7499, image: 'headphones' },
-  { id: 'sample-keyboard', name: 'Mechanical keyboard', brand: 'Keychron', price: 6499, image: 'keyboard' },
-  { id: 'sample-controller', name: 'Wireless controller', brand: 'Logitech', price: 3299, image: 'controller' },
-];
+export const storageKey = 'voltstock.inventory.v2';
+const previousStorageKey = 'voltstock.inventory.v1';
+
+function readRecords(key) {
+  const saved = localStorage.getItem(key);
+  if (saved === null) return null;
+  const records = JSON.parse(saved);
+  const valid = Array.isArray(records) && records.every(product =>
+    product && typeof product.id === 'string' && typeof product.name === 'string' &&
+    typeof product.brand === 'string' && Number.isFinite(product.price) && product.price > 0
+  );
+  return valid ? records : null;
+}
 
 export function loadInventory() {
   try {
-    const saved = localStorage.getItem(storageKey);
-    if (saved !== null) {
-      const records = JSON.parse(saved);
-      if (Array.isArray(records) && records.every(product =>
-        product && typeof product.id === 'string' && typeof product.name === 'string' &&
-        typeof product.brand === 'string' && Number.isFinite(product.price) && product.price > 0
-      )) return records;
+    const current = readRecords(storageKey);
+    if (current !== null) return current;
+
+    const previous = readRecords(previousStorageKey);
+    if (previous !== null) {
+      if (previous.length === 0) return [];
+      return [...previous, ...additionalSamples];
     }
   } catch {
-    // Browser storage may be unavailable. The inventory still works in memory.
+    // The starter catalog also works when browser storage is unavailable.
   }
-  return examples;
+  return [...originalSamples, ...additionalSamples];
 }
 
 export const formatPrice = new Intl.NumberFormat('en-IN', {
