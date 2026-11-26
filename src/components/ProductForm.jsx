@@ -1,5 +1,7 @@
 import React, { useRef } from 'react';
 
+import { categories, defaultCategory } from '../inventory';
+
 export default function ProductForm({ onAdd }) {
   const nameInput = useRef(null);
 
@@ -17,7 +19,7 @@ export default function ProductForm({ onAdd }) {
         return;
       }
     }
-    onAdd({ id: crypto.randomUUID(), name, brand, price });
+    onAdd({ id: crypto.randomUUID(), name, brand, price, category: form.elements.category.value });
     form.reset();
     nameInput.current.focus();
   }
@@ -30,6 +32,11 @@ export default function ProductForm({ onAdd }) {
         <label>Brand name<input name="brand" placeholder="e.g. Logitech" required maxLength={80} /></label>
         <label>Product price
           <span className="price-field"><span aria-hidden="true">₹</span><input aria-label="Product price in rupees" name="price" type="number" inputMode="decimal" placeholder="0.00" min="0.01" max="999999999.99" step="0.01" required /></span>
+        </label>
+        <label>Category
+          <select name="category" defaultValue={defaultCategory}>
+            {categories.map(category => <option key={category}>{category}</option>)}
+          </select>
         </label>
         <button type="submit" className="add-button"><span aria-hidden="true">+</span> Add Product</button>
       </form>

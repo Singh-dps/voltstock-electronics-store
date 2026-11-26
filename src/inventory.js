@@ -3,6 +3,25 @@ import { additionalSamples, originalSamples } from './sampleProducts.js';
 export const storageKey = 'voltstock.inventory.v2';
 const previousStorageKey = 'voltstock.inventory.v1';
 
+const samples = [...originalSamples, ...additionalSamples];
+const sampleCategories = new Map(samples.map(product => [product.id, product.category]));
+export const defaultCategory = 'Other';
+export const categories = [...new Set(sampleCategories.values())].sort().concat(defaultCategory);
+
+const alphabetic = new Intl.Collator('en', { sensitivity: 'base', numeric: true });
+
+export function sortProducts(products, order) {
+  if (order === 'default') return products;
+  const [field, direction] = order.split('-');
+  const multiplier = direction === 'desc' ? -1 : 1;
+  return [...products].sort((a, b) => {
+    const comparison = field === 'price'
+      ? a.price - b.price
+      : alphabetic.compare(a[field], b[field]);
+    return multiplier * comparison;
+  });
+}
+
 function readRecords(key) {
   const saved = localStorage.getItem(key);
   if (saved === null) return null;
@@ -11,7 +30,13 @@ function readRecords(key) {
     product && typeof product.id === 'string' && typeof product.name === 'string' &&
     typeof product.brand === 'string' && Number.isFinite(product.price) && product.price > 0
   );
-  return valid ? records : null;
+  if (!valid) return null;
+  return records.map(product => ({
+    ...product,
+    category: categories.includes(product.category)
+      ? product.category
+      : sampleCategories.get(product.id) ?? defaultCategory,
+  }));
 }
 
 export function loadInventory() {
@@ -27,7 +52,7 @@ export function loadInventory() {
   } catch {
     // The starter catalog also works when browser storage is unavailable.
   }
-  return [...originalSamples, ...additionalSamples];
+  return samples;
 }
 
 export const formatPrice = new Intl.NumberFormat('en-IN', {

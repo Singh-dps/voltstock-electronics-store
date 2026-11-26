@@ -8,7 +8,7 @@ export default function ElectronicsCard({ product, onDelete }) {
   return (
     <li className="product-card">
       <div className={'thumbnail ' + illustration}><img src={'./art/' + illustration + '.png'} alt="" /></div>
-      <div className="product-detail"><h3>{product.name}</h3><p>{product.brand}</p></div>
+      <div className="product-detail"><h3>{product.name}</h3><p><span>{product.brand}</span> · <span>{product.category}</span></p></div>
       <strong className="amount">{formatPrice.format(product.price)}</strong>
       <button type="button" className="delete-button" aria-label={'Delete ' + product.name} title={'Delete ' + product.name} onClick={() => onDelete(product)}>
         <span className="bin" aria-hidden="true" />

@@ -7,7 +7,7 @@
 }
 * { box-sizing: border-box; }
 body { margin: 0; }
-button, input { font: inherit; }
+button, input, select { font: inherit; }
 button { cursor: pointer; }
 .wrapper { width: min(1160px, calc(100% - 80px)); margin: 0 auto; }
 header { background: #fff; border-bottom: 1px solid #deddd8; }
@@ -28,9 +28,9 @@ h1 { font-size: clamp(36px,4.4vw,58px); font-weight: 700; line-height: 1.05; let
 h2 { font-size: 22px; line-height: 1.3; letter-spacing: -.045em; }
 form { margin-top: 23px; display: grid; gap: 18px; }
 label { display: grid; gap: 8px; font-weight: 600; font-size: 13px; }
-input { min-width: 0; width: 100%; height: 44px; padding: 0 13px; border-radius: 8px; background: #fff; border: 1px solid #cccdc8; font-weight: 400; font-size: 14px; color: inherit; }
+input, select { min-width: 0; width: 100%; height: 44px; padding: 0 13px; border-radius: 8px; background: #fff; border: 1px solid #cccdc8; font-weight: 400; font-size: 14px; color: inherit; }
 input::placeholder { color: #75747d; }
-input:focus-visible, button:focus-visible { outline: 3px solid #9473bd; outline-offset: 2px; }
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 3px solid #9473bd; outline-offset: 2px; }
 .price-field { display: flex; position: relative; align-items: center; }
 .price-field span { position: absolute; left: 14px; font-weight: 500; }
 .price-field input { padding-left: 32px; }
@@ -38,6 +38,8 @@ input:focus-visible, button:focus-visible { outline: 3px solid #9473bd; outline-
 .add-button:hover { background: #c8ed92; }
 .add-button span { font-weight: 400; font-size: 21px; }
 .catalog-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 22px; }
+.sort-control { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 0 0 16px; }
+.sort-control select { width: auto; height: 36px; padding-inline: 10px; }
 .count { border: 1px solid #e0d9e9; background: #f4eef9; border-radius: 99px; color: #625070; padding: 5px 11px; font: 12px/1.1 ui-monospace, monospace; white-space: nowrap; }
 ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
 .product-card { display: grid; grid-template-columns: 66px minmax(0,1fr) auto 32px; align-items: center; column-gap: 15px; border: 1px solid #dfdfda; padding: 15px; border-radius: 11px; }
