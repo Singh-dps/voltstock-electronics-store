@@ -6,9 +6,11 @@ Voltstock is a single-page React application for maintaining a store's electroni
 
 ## Run locally
 
-Install Node.js 22.12 or later and npm. Clone this repository using the URL under GitHub's **Code** button, or download and extract its ZIP. Open a terminal in the folder containing `package.json` and run:
+Install Node.js 22.12 or later and npm. In a terminal, run the following commands.
 
 ```sh
+git clone https://github.com/Singh-dps/voltstock-electronics-store.git
+cd voltstock-electronics-store
 npm ci
 npm run dev
 ```
