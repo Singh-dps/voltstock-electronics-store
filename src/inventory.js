@@ -22,16 +22,45 @@ export function sortProducts(products, order) {
   });
 }
 
+export function isListAllQuery(query) {
+  const trimmed = query.trim().toLowerCase();
+  return trimmed === '--all' || trimmed === 'ls' || trimmed === '*';
+}
+
+function matchesToken(product, token) {
+  if (token.startsWith('brand:')) {
+    const term = token.slice(6);
+    return !term || product.brand.toLowerCase().includes(term);
+  }
+  if (token.startsWith('cat:') || token.startsWith('category:')) {
+    const term = token.slice(token.indexOf(':') + 1);
+    return !term || product.category.toLowerCase().includes(term);
+  }
+  const priceMatch = token.match(/^price(<=|>=|<|>|=)(\d+(?:\.\d+)?)$/);
+  if (priceMatch) {
+    const [, op, rawAmount] = priceMatch;
+    const amount = Number(rawAmount);
+    if (op === '<') return product.price < amount;
+    if (op === '<=') return product.price <= amount;
+    if (op === '>') return product.price > amount;
+    if (op === '>=') return product.price >= amount;
+    return product.price === amount;
+  }
+  return (
+    product.name.toLowerCase().includes(token) ||
+    product.brand.toLowerCase().includes(token) ||
+    product.category.toLowerCase().includes(token)
+  );
+}
+
 export function filterProducts(products, query, category) {
-  const normalizedQuery = query.trim().toLowerCase();
+  const trimmed = query.trim().toLowerCase();
+  const listAll = isListAllQuery(trimmed);
+  const tokens = listAll || !trimmed ? [] : trimmed.split(/\s+/);
+
   return products.filter(product => {
     if (category !== 'all' && product.category !== category) return false;
-    if (!normalizedQuery) return true;
-    return (
-      product.name.toLowerCase().includes(normalizedQuery) ||
-      product.brand.toLowerCase().includes(normalizedQuery) ||
-      product.category.toLowerCase().includes(normalizedQuery)
-    );
+    return tokens.every(token => matchesToken(product, token));
   });
 }
 
